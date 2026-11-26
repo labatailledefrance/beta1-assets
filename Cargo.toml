@@ -1,0 +1,36 @@
+[package]
+name = "beta1-assets"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.100"
+license = "AGPL-3.0-or-later"
+description = "La Bataille de France, beta 1 : manifeste, téléchargement et vérification des assets tiers."
+repository = "https://github.com/labatailledefrance/beta1-assets"
+publish = false
+
+[[bin]]
+name = "assets"
+path = "src/main.rs"
+
+# Versions exactes, publiées depuis au moins deux semaines.
+[dependencies]
+# HTTP bloquant, TLS en Rust (rustls), sans décompression transparente : les
+# octets reçus sont ceux qu'on vérifie.
+ureq = { version = "=3.5.1", default-features = false, features = ["rustls"] }
+sha2 = "=0.11.1"
+clap = { version = "=4.6.7", features = ["derive"] }
+# Archives de sons d'OpenGameArt.
+zip = { version = "=9.5.1", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+serde = { version = "=1.0.229", features = ["derive"] }
+# Manifeste.
+toml = { version = "=1.2.1", default-features = false, features = ["parse", "serde"] }
+# API de Sketchfab, en-tête JSON des fichiers GLB.
+serde_json = "=1.0.154"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+dbg_macro = "deny"
+unwrap_used = "deny"
+expect_used = "deny"
