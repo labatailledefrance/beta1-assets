@@ -1,0 +1,460 @@
+# Manifeste des assets tiers de la beta 1.
+#
+# Un `[[asset]]` est une œuvre : l'unité d'attribution (une ligne de
+# ATTRIBUTIONS.md et de l'écran de crédits). Ses `[[asset.fichier]]` sont les
+# fichiers à télécharger, rangés sous `<racine>/<id>/<nom>`.
+#
+# Le manifeste joue le rôle d'un lockfile : un fichier n'est accepté que si sa
+# taille et son SHA-256 sont ceux d'ici. Ajouter ou mettre à jour un asset est
+# un changement relu en PR, comme une dépendance ; `cargo test` vérifie les
+# licences (CC0-1.0, CC-BY-4.0, OFL-1.1), les hôtes et que ATTRIBUTIONS.md
+# est à jour (`cargo run -- attributions --ecrire`).
+#
+# Champs d'un fichier : `url` (HTTPS, hôtes connus) ou `sketchfab` (uid du
+# modèle, téléchargé par l'API avec le jeton SKETCHFAB_TOKEN, licence
+# revérifiée sur Sketchfab avant chaque téléchargement) ; `extraire` : entrées
+# d'une archive zip à extraire à côté d'elle (sous leur seul nom de fichier).
+
+# --- Modèles 3D : véhicules (Sketchfab, CC-BY-4.0) ---
+
+[[asset]]
+id = "leclerc"
+titre = "Char Leclerc"
+auteur = "andertan"
+licence = "CC-BY-4.0"
+page = "https://sketchfab.com/3d-models/char-leclerc-84a0918d2f534c2eb003ab3cb3029c03"
+modifications = "114 000 → 31 000 triangles, tourelle séparée, échelle, matériaux mats"
+[[asset.fichier]]
+sketchfab = "84a0918d2f534c2eb003ab3cb3029c03"
+nom = "char_leclerc.glb"
+octets = 8216704
+sha256 = "84385d79783b4e2977567f2e136e3f7170a8b806bf67be705107205b04a1c689"
+
+[[asset]]
+id = "vbci"
+titre = "VBCI Low Poly"
+auteur = "Waroxed"
+licence = "CC-BY-4.0"
+page = "https://sketchfab.com/3d-models/vbci-low-poly-b82618d1fa664b76bca48863a55aa317"
+modifications = "tourelle séparée, échelle, matériaux mats"
+[[asset.fichier]]
+sketchfab = "b82618d1fa664b76bca48863a55aa317"
+nom = "vbci_low_poly.glb"
+octets = 1259736
+sha256 = "a771c605494834817dc0b6f1649673d5850ec684fe92d5175438d8c7cdaef05d"
+
+[[asset]]
+id = "rafale"
+titre = "Dassault Rafale"
+auteur = "andertan"
+licence = "CC-BY-4.0"
+page = "https://sketchfab.com/3d-models/dassault-rafale-fabb8472bc2e413282c80406b13ff1a7"
+modifications = "réduction légère, échelle, matériaux mats, verrière opaque"
+[[asset.fichier]]
+sketchfab = "fabb8472bc2e413282c80406b13ff1a7"
+nom = "dassault_rafale.glb"
+octets = 4206264
+sha256 = "4493cdf4d8e4658c763bbb8e12ec38caeb554d5d9e03cd19e44a1c88c386a967"
+
+[[asset]]
+id = "charles-de-gaulle"
+titre = "Charles De Gaulle Aircraft Carrier"
+auteur = "Muhamad Mirza Arrafi"
+licence = "CC-BY-4.0"
+page = "https://sketchfab.com/3d-models/charles-de-gaulle-aircraft-carrier-4ed9674d1adf406bb1b358dd4a8c93a1"
+modifications = "échelle, repère, matériaux mats, textures réduites"
+[[asset.fichier]]
+sketchfab = "4ed9674d1adf406bb1b358dd4a8c93a1"
+nom = "charles_de_gaulle_aircraft_carrier.glb"
+octets = 2192276
+sha256 = "faad7fbaae2bd6c2ebd2416b064a5ebde2498ab5ce64a2ae09b49dbd94ae649d"
+
+# --- Modèles 3D : Quaternius (Poly Pizza, CC0-1.0) ---
+
+[[asset]]
+id = "quaternius-truck"
+titre = "Truck"
+auteur = "Quaternius"
+licence = "CC0-1.0"
+page = "https://poly.pizza/m/cXw6oiFtZ8"
+modifications = "camion militaire : échelle, réduction, peint en vert armée"
+[[asset.fichier]]
+url = "https://static.poly.pizza/f4b28921-b45e-4653-b54c-c3976e4ea0fe.glb"
+nom = "truck2.glb"
+octets = 326828
+sha256 = "a5d107b5b06f8ca2d8d7e66ae6309f2e1a25cac577c5db8ebb661b3f0ca5ed8f"
+
+[[asset]]
+id = "quaternius-tree"
+titre = "Tree"
+auteur = "Quaternius"
+licence = "CC0-1.0"
+page = "https://poly.pizza/m/2paAm1ja4w"
+modifications = "échelle, réduction, matériaux mats"
+[[asset.fichier]]
+url = "https://static.poly.pizza/18bfa206-01b3-4368-a391-513f21078bb1.glb"
+nom = "tree.glb"
+octets = 158708
+sha256 = "61c05d351070fb5fb9f7c1b46b53f59cfd9625ddd16ba8de1ef3855f35557f72"
+
+[[asset]]
+id = "quaternius-casual"
+titre = "Casual"
+auteur = "Quaternius"
+licence = "CC0-1.0"
+page = "https://poly.pizza/m/kZ3DmIoGip"
+modifications = "zombie : réduction, teintes, bras tendus, animations précalculées"
+[[asset.fichier]]
+url = "https://static.poly.pizza/90a9e2d4-053f-42f1-99a2-8f5e1180ea7f.glb"
+nom = "casual.glb"
+octets = 1430660
+sha256 = "fea7e71271203e7073f1a073fa1208de7402df276f87f80e149bf7589b5d46b4"
+
+[[asset]]
+id = "quaternius-worker"
+titre = "Worker"
+auteur = "Quaternius"
+licence = "CC0-1.0"
+page = "https://poly.pizza/m/Yg2bQZO6Hj"
+modifications = "zombie : réduction, teintes, bras tendus, animations précalculées"
+[[asset.fichier]]
+url = "https://static.poly.pizza/3a5f3056-ffe6-42eb-bd52-122afcbd22b2.glb"
+nom = "worker.glb"
+octets = 1344928
+sha256 = "9c28614f465b7dc105f908c20c22fc045f4b07caf8c5ef0e9f8049eceb6dd38d"
+
+[[asset]]
+id = "quaternius-farmer"
+titre = "Farmer"
+auteur = "Quaternius"
+licence = "CC0-1.0"
+page = "https://poly.pizza/m/7pn3R6hPvE"
+modifications = "zombie : réduction, teintes, bras tendus, animations précalculées"
+[[asset.fichier]]
+url = "https://static.poly.pizza/81f2f0cf-6f53-4b57-92ea-dba0928620f2.glb"
+nom = "farmer.glb"
+octets = 1370524
+sha256 = "f7ae6e2596c6521d296fa5948783f1dac717807456ce5355e48719e81d15e9a6"
+
+[[asset]]
+id = "quaternius-adventurer"
+titre = "Adventurer"
+auteur = "Quaternius"
+licence = "CC0-1.0"
+page = "https://poly.pizza/m/5EGWBMpuXq"
+modifications = "zombie : réduction, teintes, bras tendus, animations précalculées"
+[[asset.fichier]]
+url = "https://static.poly.pizza/bbe369ee-a686-42c7-adad-14356f5f2f15.glb"
+nom = "adv.glb"
+octets = 1944116
+sha256 = "4a8639cd8eee9d8a150464edc25eb0536ced464790704a64e40c8620d99f66db"
+
+[[asset]]
+id = "quaternius-swat"
+titre = "SWAT"
+auteur = "Quaternius"
+licence = "CC0-1.0"
+page = "https://poly.pizza/m/Btfn3G5Xv4"
+modifications = "soldat : réduction, treillis, arme en main, animations précalculées"
+[[asset.fichier]]
+url = "https://static.poly.pizza/713f6535-f4f3-4367-a4c6-ced126ae0936.glb"
+nom = "swat.glb"
+octets = 1560900
+sha256 = "a835107bac833eb916c494e10997ae1709e85957ea6f6c59ace3c9a66f6d1fec"
+
+[[asset]]
+id = "quaternius-assault-rifle"
+titre = "Assault Rifle"
+auteur = "Quaternius"
+licence = "CC0-1.0"
+page = "https://poly.pizza/m/Bgvuu4CUMV"
+modifications = "réduction, fusionné à la main du soldat"
+[[asset.fichier]]
+url = "https://static.poly.pizza/9a0e478c-de82-4773-9b70-a0219bb0057c.glb"
+nom = "rifle.glb"
+octets = 133980
+sha256 = "a6b90047927c65d0026bb19b5d4625b5ed3270e4ea5e39619cc50f0770aa6259"
+
+# --- Textures : Poly Haven (CC0-1.0), couleur diffuse en 1k ---
+# Toutes : 512 px, ramenées à un détail autour de la moyenne (la teinte vient
+# du jeu).
+
+[[asset]]
+id = "polyhaven-aerial-grass-rock"
+titre = "Aerial Grass Rock"
+auteur = "Rob Tuytel"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/aerial_grass_rock"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_diff_1k.jpg"
+nom = "aerial_grass_rock.jpg"
+octets = 666655
+sha256 = "57b8041bfe0d0f01430e4dbaad45e7ddddf0a9fc97317f90dbc51f7b0d9e1b5d"
+
+[[asset]]
+id = "polyhaven-aerial-sand"
+titre = "Aerial Sand"
+auteur = "Rob Tuytel"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/aerial_sand"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_sand/aerial_sand_diff_1k.jpg"
+nom = "aerial_sand.jpg"
+octets = 490916
+sha256 = "d5195c44aec087d2a30d3ca3a3fa3458a1898986e0572e9a8043f8245598557a"
+
+[[asset]]
+id = "polyhaven-brown-mud"
+titre = "Brown Mud"
+auteur = "Rob Tuytel"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/brown_mud"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_mud/brown_mud_diff_1k.jpg"
+nom = "brown_mud.jpg"
+octets = 501955
+sha256 = "df3f135c899f10a3b018738343b222cbc67d13e7c76c5d8da834a3d34c984417"
+
+[[asset]]
+id = "polyhaven-cliff-side"
+titre = "Cliff Side"
+auteur = "James Ray Cock, Jenelle van Heerden, Dario Barresi"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/cliff_side"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/cliff_side/cliff_side_diff_1k.jpg"
+nom = "cliff_side.jpg"
+octets = 859756
+sha256 = "5c6858541108fc34e5726ecf4d8d942d6301155c489e7341619260f2909570c5"
+
+[[asset]]
+id = "polyhaven-forest-ground-04"
+titre = "Forest Ground 04"
+auteur = "Rob Tuytel, Rico Cilliers"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/forest_ground_04"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/forest_ground_04/forest_ground_04_diff_1k.jpg"
+nom = "forest_ground_04.jpg"
+octets = 1113899
+sha256 = "50a4dda30875020c64385261aa7e00e2155b592302fa6794165f58fae73cbd2c"
+
+[[asset]]
+id = "polyhaven-asphalt-02"
+titre = "Asphalt 02"
+auteur = "Rob Tuytel"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/asphalt_02"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_diff_1k.jpg"
+nom = "asphalt_02.jpg"
+octets = 731707
+sha256 = "1aa5ce99f58a625c71d48cfc3e68b65ca85ccb00f39e045c0a928608a0ea25ed"
+
+[[asset]]
+id = "polyhaven-castle-wall-slates"
+titre = "Castle Wall Slates"
+auteur = "Rob Tuytel"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/castle_wall_slates"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/castle_wall_slates/castle_wall_slates_diff_1k.jpg"
+nom = "castle_wall_slates.jpg"
+octets = 625282
+sha256 = "1c42fe616560553caf8f61f298750e6a2cee06bf2a4af9156a930057d02da003"
+
+[[asset]]
+id = "polyhaven-roof-slates-02"
+titre = "Roof Slates 02"
+auteur = "Rob Tuytel"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/roof_slates_02"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/roof_slates_02/roof_slates_02_diff_1k.jpg"
+nom = "roof_slates_02.jpg"
+octets = 515626
+sha256 = "de3d2729ab385c5f7dd7106d3b435c737f6d2c3ea8883cea37de53cec2a34867"
+
+[[asset]]
+id = "polyhaven-roof-tiles-14"
+titre = "Roof Tiles 14"
+auteur = "Rob Tuytel"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/roof_tiles_14"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/roof_tiles_14/roof_tiles_14_diff_1k.jpg"
+nom = "roof_tiles_14.jpg"
+octets = 416642
+sha256 = "756217e3dfa9ddfd9d880a9f4938abca7fb7dfcf9b7184949894eed33868ae6f"
+
+[[asset]]
+id = "polyhaven-cobblestone-floor-04"
+titre = "Cobblestone Floor 04"
+auteur = "Rob Tuytel"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/cobblestone_floor_04"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/cobblestone_floor_04/cobblestone_floor_04_diff_1k.jpg"
+nom = "cobblestone_floor_04.jpg"
+octets = 575440
+sha256 = "b0662eaec38a2056ef00abc66d1a0e8da421d704ed3ff8f9e268ad4c7b2aa58c"
+
+[[asset]]
+id = "polyhaven-old-stone-wall-02"
+titre = "Old Stone Wall 02"
+auteur = "Charlotte Baglioni"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/old_stone_wall_02"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/old_stone_wall_02/old_stone_wall_02_diff_1k.jpg"
+nom = "old_stone_wall_02.jpg"
+octets = 822548
+sha256 = "2b841b146fc5aa48b7a63143c5c1b6679c7645320cce31c97bd38d541f5144ac"
+
+[[asset]]
+id = "polyhaven-leafy-grass"
+titre = "Leafy Grass"
+auteur = "Charlotte Baglioni"
+licence = "CC0-1.0"
+page = "https://polyhaven.com/a/leafy_grass"
+modifications = "512 px, détail autour de la moyenne"
+[[asset.fichier]]
+url = "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/leafy_grass/leafy_grass_diff_1k.jpg"
+nom = "leafy_grass.jpg"
+octets = 1195394
+sha256 = "cfa40bc9d9417d1852db8753a8d5917f110c40101179f63543c382e39bc05e4a"
+
+# --- Police ---
+
+[[asset]]
+id = "dotgothic16"
+titre = "DotGothic16"
+auteur = "The DotGothic16 Project Authors (Fontworks)"
+licence = "OFL-1.1"
+page = "https://github.com/google/fonts/tree/9a6cc6b8ce992aff77b69c857c46af0b42cdff76/ofl/dotgothic16"
+modifications = "aucune"
+[[asset.fichier]]
+url = "https://raw.githubusercontent.com/google/fonts/9a6cc6b8ce992aff77b69c857c46af0b42cdff76/ofl/dotgothic16/DotGothic16-Regular.ttf"
+nom = "DotGothic16-Regular.ttf"
+octets = 2069236
+sha256 = "3ad9af88726d42b40f7f365f0dcac785af73cf20ea6f1d5b44e57cc21150b8f1"
+# Texte de la licence : l'OFL demande qu'il accompagne la police.
+[[asset.fichier]]
+url = "https://raw.githubusercontent.com/google/fonts/9a6cc6b8ce992aff77b69c857c46af0b42cdff76/ofl/dotgothic16/OFL.txt"
+nom = "OFL.txt"
+octets = 4492
+sha256 = "b6630c61ea078cacd7fabe37d14ffe557a0b45b06683374a9aa9e24262993e33"
+
+# --- Sons : OpenGameArt (CC0-1.0) ---
+
+[[asset]]
+id = "oga-gunshot-sounds"
+titre = "Gunshot Sounds"
+auteur = "Tabasco (Vincent Sevedge)"
+licence = "CC0-1.0"
+page = "https://opengameart.org/content/gunshot-sounds"
+modifications = "coups isolés (SKS, Mosin-Nagant), mono, hauteur changée"
+# L'archive contient un creativecommons.txt de 2009 (CC-BY 3.0, Vincent
+# Sevedge) ; l'auteur l'a publiée en CC0 sur OpenGameArt en 2010. On suit la
+# page, la plus récente, et on crédite l'auteur quand même.
+remarque = "l'archive de 2009 porte une mention CC-BY 3.0 ; publiée par l'auteur en CC0 en 2010"
+[[asset.fichier]]
+url = "https://opengameart.org/sites/default/files/sounds.zip"
+nom = "sounds.zip"
+octets = 5504243
+sha256 = "5b3960083a94e18ee47bc84376615a476debc884b18f25b93ea4b6ab3f278e4f"
+extraire = ["sounds/sks.wav", "sounds/mosin.wav"]
+
+[[asset]]
+id = "oga-explosion"
+titre = "Explosion"
+auteur = "TinyWorlds"
+licence = "CC0-1.0"
+page = "https://opengameart.org/content/explosion-0"
+modifications = "ralentie, mélangée"
+[[asset.fichier]]
+url = "https://opengameart.org/sites/default/files/explosion.wav"
+nom = "explosion.wav"
+octets = 86796
+sha256 = "df2594dcef5cf8f8f9b131828224fc47c9e3fdaf677bd9211d1b372dfde47177"
+
+[[asset]]
+id = "oga-muffled-distant-explosion"
+titre = "Muffled Distant Explosion"
+auteur = "NenadSimic"
+licence = "CC0-1.0"
+page = "https://opengameart.org/content/muffled-distant-explosion"
+modifications = "mélangée"
+[[asset.fichier]]
+url = "https://opengameart.org/sites/default/files/NenadSimic%20-%20Muffled%20Distant%20Explosion.wav"
+nom = "lointaine.wav"
+octets = 907518
+sha256 = "13a0bf75af94ec6d332bc71cba489b573466e05c4b17288158b3d683b41de39f"
+
+[[asset]]
+id = "oga-zombies-sound-pack"
+titre = "Zombies Sound Pack"
+auteur = "artisticdude"
+licence = "CC0-1.0"
+page = "https://opengameart.org/content/zombies-sound-pack"
+modifications = "mono, 10 sons sur 24"
+[[asset.fichier]]
+url = "https://opengameart.org/sites/default/files/zombies.zip"
+nom = "zombies.zip"
+octets = 4667201
+sha256 = "8096ceeb4dac35d9eef9bfe0cc6649778d1eebf141b208d394ac338b9e5be314"
+extraire = [
+  "zombies/zombie-1.wav", "zombies/zombie-5.wav", "zombies/zombie-8.wav", "zombies/zombie-10.wav",
+  "zombies/zombie-12.wav", "zombies/zombie-15.wav", "zombies/zombie-16.wav", "zombies/zombie-17.wav",
+  "zombies/zombie-18.wav", "zombies/zombie-21.wav",
+]
+
+[[asset]]
+id = "oga-racing-car-engine"
+titre = "Racing car engine sound loops"
+auteur = "domasx2"
+licence = "CC0-1.0"
+page = "https://opengameart.org/content/racing-car-engine-sound-loops"
+modifications = "bouclé"
+[[asset.fichier]]
+url = "https://opengameart.org/sites/default/files/loop_0.wav"
+nom = "loop_0.wav"
+octets = 76332
+sha256 = "69d74b106509037ce547429e4c3f9ae906b0fffe88d0bb8b3b5a8b0cfc239048"
+
+[[asset]]
+id = "oga-beach-ocean-waves"
+titre = "Beach Ocean Waves"
+auteur = "qubodup (Jasinski)"
+licence = "CC0-1.0"
+page = "https://opengameart.org/content/beach-ocean-waves"
+modifications = "aucune"
+[[asset.fichier]]
+url = "https://opengameart.org/sites/default/files/jasinski-wave-prev.ogg"
+nom = "jasinski-wave-prev.ogg"
+octets = 163241
+sha256 = "7f2069b19449a8eabbd9d738c2d5cb07e718db5481f41bdf1347d4d713141c81"
+
+[[asset]]
+id = "oga-wind"
+titre = "Wind"
+auteur = "ignasd"
+licence = "CC0-1.0"
+page = "https://opengameart.org/content/wind"
+modifications = "aucune"
+[[asset.fichier]]
+url = "https://opengameart.org/sites/default/files/Wind.ogg"
+nom = "Wind.ogg"
+octets = 59861
+sha256 = "ff4f8a48b824e88ef3a53c5bc726e1da2b9593d84ac1bd6048b4ed6ddd4bad69"
