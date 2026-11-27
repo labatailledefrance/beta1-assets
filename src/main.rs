@@ -70,6 +70,10 @@ enum Commande {
         blender: PathBuf,
         #[arg(long, default_value = "/opt/assets/blender")]
         scripts: PathBuf,
+        /// Publications complètes gardées en plus de la courante (les plus
+        /// récentes) ; les autres sont supprimées une fois celle-ci complète.
+        #[arg(long, default_value_t = 1)]
+        garder: usize,
     },
     /// Attend qu'un fichier existe (initContainer : marqueur COMPLET d'une publication).
     Attendre {
@@ -175,7 +179,7 @@ fn main() -> ExitCode {
                 }
             }
         }
-        Commande::Publier { sources, sortie, publication: id, blender, scripts } => {
+        Commande::Publier { sources, sortie, publication: id, blender, scripts, garder } => {
             let b = conversion::Blender { executable: blender, scripts };
             let jeton = std::env::var("SKETCHFAB_TOKEN").ok();
             let r = publication::publier(&sortie, &id, |travail| {
@@ -194,6 +198,11 @@ fn main() -> ExitCode {
                 }
                 conversion::convertir(&assets, &sources, travail, Some(&b))
             });
+            if r.is_ok() {
+                let b = publication::nettoyer(&sortie, &id, garder, std::time::SystemTime::now());
+                b.supprimees.iter().for_each(|n| println!("ancienne publication supprimée : {n}"));
+                b.erreurs.iter().for_each(|e| eprintln!("nettoyage : {e}"));
+            }
             match r {
                 Ok(publication::Etat::DejaComplete) => {
                     println!("publication {id} déjà complète");
