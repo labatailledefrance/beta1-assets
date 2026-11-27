@@ -4,7 +4,7 @@ Assets tiers de la beta 1 de **La Bataille de France** : modèles 3D, textures, 
 
 **Ce dépôt ne contient aucun asset.** Il contient leur **manifeste** ([manifeste.toml](manifeste.toml) : URL, taille, SHA-256, licence SPDX, auteur, modifications) et l'outil `assets`, qui les télécharge et les vérifie. Le projet ne redistribue donc rien dans git ; le jeu déployé, lui, sert les assets aux joueurs, d'où la liste fermée de licences. Les crédits sont dans [ATTRIBUTIONS.md](ATTRIBUTIONS.md), généré depuis le manifeste.
 
-**En construction** : image et Job de téléchargement et de conversion dans le chart `game`.
+**En construction** : Job de téléchargement et de conversion dans le chart `game` ([beta1-helm](https://github.com/labatailledefrance/beta1-helm)).
 
 ## Règles
 
@@ -58,5 +58,26 @@ Blender ne sert qu'aux maillages et aux animations ; tout le reste est en Rust, 
 1. Vérifier la licence sur la page de l'œuvre (CC0-1.0, CC-BY-4.0 ou OFL-1.1) et noter l'auteur.
 2. Ajouter un `[[asset]]` au manifeste (voir l'en-tête du fichier), avec `cargo run -- empreinte` pour la taille et le SHA-256.
 3. `cargo run -- attributions --ecrire`, `cargo test`, puis PR.
+
+## Image
+
+`ghcr.io/labatailledefrance/beta1-assets`, publiée par la CI après fusion, signée (cosign) et attestée (SLSA), comme les autres images du projet :
+
+- `assets` (le manifeste est compilé dedans : le digest de l'image fixe les assets) et les scripts de `blender/` ;
+- Blender 5.3.0 officiel, vérifié par le SHA-256 publié sur download.blender.org, et les bibliothèques système qu'il charge même sans fenêtre (X11, xkbcommon, GL), prises dans le dépôt apt de DHI aux versions exactes ;
+- base `dhi.io/debian-base:trixie` épinglée par digest, sans gestionnaire de paquets, utilisateur 65532.
+
+Essai local dans les conditions d'un Job (racine en lecture seule, sans capacités, sans réseau pour la conversion) :
+
+```sh
+docker build -t beta1-assets .
+docker run --rm --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges \
+  -v "$PWD/sources:/sources" beta1-assets telecharger --racine /sources
+docker run --rm --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges --network none \
+  -v "$PWD/sources:/sources:ro" -v "$PWD/sortie:/sortie" \
+  beta1-assets convertir --racine /sources --sortie /sortie --blender /opt/blender/blender --scripts /opt/assets/blender
+```
+
+Poly Pizza (Cloudflare) refuse les IP de datacenter, srv compris : les 8 modèles Quaternius se téléchargent depuis une machine personnelle, puis se copient dans le volume des sources. `telecharger` vérifie les fichiers présents et ne télécharge que les autres.
 
 Contribution : [CONTRIBUTING.md](https://github.com/labatailledefrance/.github/blob/main/CONTRIBUTING.md). Licence de l'outil : AGPL-3.0-or-later ; chaque asset garde la sienne.
