@@ -85,7 +85,7 @@ assets publier --sources /donnees/sources --sortie /donnees/publications --publi
 assets attendre --fichier /donnees/publications/<id>/COMPLET   # initContainer
 ```
 
-La publication est adressée par ses entrées : le chart dérive `<id>` du digest de l'image, qui contient le manifeste et les scripts. Une publication complète relancée sort aussitôt. Sinon, `publier` télécharge ce qui manque, convertit dans `<id>.partiel`, écrit `MANIFESTE` (SHA-256 de chaque fichier) et `COMPLET`, puis renomme : un dossier visible sous son nom est complet et ne change plus.
+La publication est adressée par ses entrées : le chart dérive `<id>` du digest de l'image, qui contient le manifeste et les scripts. Une publication complète relancée sort aussitôt. Sinon, `publier` télécharge ce qui manque, convertit dans `<id>.partiel`, écrit `MANIFESTE` (SHA-256 de chaque fichier) et `COMPLET`, puis renomme : un dossier visible sous son nom est complet et ne change plus. Ensuite, `publier` supprime les anciennes publications : il garde la courante et la plus récente des autres (`--garder 1`, servie pendant la bascule), supprime les autres et les `.partiel` sans écriture depuis 24 h.
 
 Poly Pizza (Cloudflare) refuse les IP de datacenter, srv compris : les 8 modèles Quaternius se téléchargent depuis une machine personnelle, puis se copient dans le volume des sources. `telecharger` vérifie les fichiers présents et ne télécharge que les autres.
 
