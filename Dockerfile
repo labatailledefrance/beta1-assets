@@ -49,6 +49,16 @@ RUN curl -fsSL --proto '=https' -o /tmp/blender.tar.xz \
  && mkdir -p /opt/blender \
  && tar -xJf /tmp/blender.tar.xz --strip-components=1 -C /opt/blender \
  && rm /tmp/blender.tar.xz
+# Paquets Python embarqués par Blender et inutiles aux scripts de conversion
+# (bpy, mathutils et bibliothèque standard seulement) : pip, setuptools et
+# leurs copies embarquées, client HTTP. Retirés : ils portent des
+# vulnérabilités connues (trivy) et ne servent qu'aux extensions en ligne.
+RUN shopt -s nullglob \
+ && sp=$(echo /opt/blender/[0-9]*/python/lib/python3*/site-packages) \
+ && rm -rf "$sp"/{pip,pip-*.dist-info,setuptools,setuptools-*.dist-info,pkg_resources,_distutils_hack} \
+      "$sp"/{distutils-precedence.pth,requests,requests-*.dist-info,urllib3,urllib3-*.dist-info} \
+      "$sp"/{certifi,certifi-*.dist-info,idna,idna-*.dist-info,charset_normalizer,charset_normalizer-*.dist-info} \
+ && test -d "$sp/numpy" && ! test -e "$sp/pip" && ! test -e "$sp/urllib3"
 # Bibliothèques système dont Blender et ses modules dépendent, hors glibc
 # (fournie par l'image d'exécution) : copiées dans /opt/lib-sys.
 RUN mkdir -p /opt/lib-sys \
