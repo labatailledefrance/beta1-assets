@@ -32,6 +32,10 @@ enum Commande {
         /// Sans les modèles Sketchfab (pas de jeton, comme en CI).
         #[arg(long)]
         sans_sketchfab: bool,
+        /// Seulement ce qu'il faut à `convertir --sans-blender` (pas de
+        /// modèles : Poly Pizza refuse les IP de datacenter, dont la CI).
+        #[arg(long)]
+        sans_modeles: bool,
     },
     /// Convertit les fichiers téléchargés en assets du jeu (modèles, textures, sons, police).
     Convertir {
@@ -107,7 +111,7 @@ fn main() -> ExitCode {
             println!("{} fichiers vérifiés, {echecs} en échec", n - echecs);
             if echecs == 0 { ExitCode::SUCCESS } else { ExitCode::FAILURE }
         }
-        Commande::Telecharger { racine, seulement, sans_sketchfab } => {
+        Commande::Telecharger { racine, seulement, sans_sketchfab, sans_modeles } => {
             let inconnus: Vec<&String> = seulement.iter().filter(|s| !assets.iter().any(|a| &a.id == *s)).collect();
             if !inconnus.is_empty() {
                 eprintln!("assets inconnus : {inconnus:?}");
@@ -118,6 +122,7 @@ fn main() -> ExitCode {
                 .into_iter()
                 .filter(|a| seulement.is_empty() || seulement.contains(&a.id))
                 .filter(|a| !(sans_sketchfab && sketchfab(a)))
+                .filter(|a| !sans_modeles || conversion::entrees_sans_blender().iter().any(|(id, _)| *id == a.id))
                 .collect();
             let jeton = std::env::var("SKETCHFAB_TOKEN").ok();
             let b = telechargement::telecharger(&choisis, &telechargement::Options::nouvelles(racine, jeton));

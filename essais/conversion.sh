@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Essai de conversion, sans Blender ni Sketchfab : télécharge les entrées
-# (hôtes publics), convertit textures, sons et police, puis compare les
-# empreintes à essais/sorties.sha256. Les sons et la police sont identiques
+# Essai de conversion, sans Blender : télécharge les seules entrées des
+# textures, sons et police (Poly Pizza refuse les IP de datacenter, dont la
+# CI), les convertit, puis compare les empreintes à essais/sorties.sha256. Les sons et la police sont identiques
 # octet pour octet à ceux de P-26 ; textures.p24t est figé ici.
 #   essais/conversion.sh telecharger <dossier>
 #   essais/conversion.sh verifier <dossier>
@@ -12,7 +12,7 @@ dossier=$2
 assets=target/release/assets
 case "$etape" in
   telecharger)
-    "$assets" telecharger --racine "$dossier/racine" --sans-sketchfab
+    "$assets" telecharger --racine "$dossier/racine" --sans-modeles
     ;;
   verifier)
     rm -rf "$dossier/sortie"

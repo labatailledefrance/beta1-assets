@@ -50,6 +50,11 @@ pub fn entrees() -> Vec<(&'static str, &'static str)> {
     e
 }
 
+/// Fichiers lus par une conversion sans Blender.
+pub fn entrees_sans_blender() -> Vec<(&'static str, &'static str)> {
+    entrees().split_off(ENTREES_BLENDER.len())
+}
+
 /// Blender, sans fenêtre.
 #[derive(Debug, Clone)]
 pub struct Blender {
@@ -63,9 +68,9 @@ fn ecrire(chemin: &Path, contenu: &[u8]) -> Result<(), String> {
 }
 
 pub fn convertir(assets: &[Asset], racine: &Path, sortie: &Path, blender: Option<&Blender>) -> Result<(), String> {
-    let manquants: Vec<String> = entrees()
+    let requises = if blender.is_some() { entrees() } else { entrees_sans_blender() };
+    let manquants: Vec<String> = requises
         .into_iter()
-        .skip(if blender.is_some() { 0 } else { ENTREES_BLENDER.len() })
         .filter(|(id, nom)| !racine.join(id).join(nom).exists())
         .map(|(id, nom)| format!("{id}/{nom}"))
         .collect();

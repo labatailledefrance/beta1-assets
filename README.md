@@ -51,7 +51,7 @@ Sortie, servie aux clients :
 | `polices/` | DotGothic16 et sa licence OFL | copie |
 | `ATTRIBUTIONS.md` | crédits | généré depuis le manifeste |
 
-Blender ne sert qu'aux maillages et aux animations ; tout le reste est en Rust, sans Python ni PIL. Les sorties ont été comparées à celles de P-26 : modèles (Blender 5.3.0), sons et police identiques octet pour octet ; textures à un ou deux niveaux près, le décodeur JPEG n'étant pas celui de PIL. La CI (`essai de conversion`) télécharge les entrées publiques, convertit sans Blender et compare les empreintes à [essais/sorties.sha256](essais/sorties.sha256).
+Blender ne sert qu'aux maillages et aux animations ; tout le reste est en Rust, sans Python ni PIL. Les sorties ont été comparées à celles de P-26 : modèles (Blender 5.3.0), sons et police identiques octet pour octet ; textures à un ou deux niveaux près, le décodeur JPEG n'étant pas celui de PIL. La CI (`essai de conversion`) télécharge les entrées des textures, sons et police (`--sans-modeles` : Poly Pizza refuse les IP de datacenter), convertit sans Blender et compare les empreintes à [essais/sorties.sha256](essais/sorties.sha256).
 
 ## Ajouter un asset
 
