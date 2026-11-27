@@ -4,7 +4,7 @@
 use std::path::PathBuf;
 use std::process::ExitCode;
 
-use beta1_assets::{attributions, manifeste, telechargement, verification};
+use beta1_assets::{attributions, conversion, manifeste, telechargement, verification};
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -29,6 +29,25 @@ enum Commande {
         /// Seulement ces assets (identifiants du manifeste).
         #[arg(long = "seulement")]
         seulement: Vec<String>,
+        /// Sans les modèles Sketchfab (pas de jeton, comme en CI).
+        #[arg(long)]
+        sans_sketchfab: bool,
+    },
+    /// Convertit les fichiers téléchargés en assets du jeu (modèles, textures, sons, police).
+    Convertir {
+        #[arg(long)]
+        racine: PathBuf,
+        #[arg(long)]
+        sortie: PathBuf,
+        /// Exécutable de Blender (5.3.0 : sorties identiques à P-26).
+        #[arg(long, default_value = "blender")]
+        blender: PathBuf,
+        /// Dossier des scripts Blender.
+        #[arg(long, default_value = "blender")]
+        scripts: PathBuf,
+        /// Sans les modèles (pas de Blender).
+        #[arg(long)]
+        sans_blender: bool,
     },
     /// Écrit ATTRIBUTIONS.md (ou l'affiche).
     Attributions {
@@ -88,14 +107,18 @@ fn main() -> ExitCode {
             println!("{} fichiers vérifiés, {echecs} en échec", n - echecs);
             if echecs == 0 { ExitCode::SUCCESS } else { ExitCode::FAILURE }
         }
-        Commande::Telecharger { racine, seulement } => {
+        Commande::Telecharger { racine, seulement, sans_sketchfab } => {
             let inconnus: Vec<&String> = seulement.iter().filter(|s| !assets.iter().any(|a| &a.id == *s)).collect();
             if !inconnus.is_empty() {
                 eprintln!("assets inconnus : {inconnus:?}");
                 return ExitCode::FAILURE;
             }
-            let choisis: Vec<manifeste::Asset> =
-                assets.into_iter().filter(|a| seulement.is_empty() || seulement.contains(&a.id)).collect();
+            let sketchfab = |a: &manifeste::Asset| a.fichier.iter().any(|f| f.sketchfab.is_some());
+            let choisis: Vec<manifeste::Asset> = assets
+                .into_iter()
+                .filter(|a| seulement.is_empty() || seulement.contains(&a.id))
+                .filter(|a| !(sans_sketchfab && sketchfab(a)))
+                .collect();
             let jeton = std::env::var("SKETCHFAB_TOKEN").ok();
             let b = telechargement::telecharger(&choisis, &telechargement::Options::nouvelles(racine, jeton));
             println!(
@@ -106,6 +129,16 @@ fn main() -> ExitCode {
                 b.echecs.len()
             );
             if b.echecs.is_empty() { ExitCode::SUCCESS } else { ExitCode::FAILURE }
+        }
+        Commande::Convertir { racine, sortie, blender, scripts, sans_blender } => {
+            let b = conversion::Blender { executable: blender, scripts };
+            match conversion::convertir(&assets, &racine, &sortie, (!sans_blender).then_some(&b)) {
+                Ok(()) => ExitCode::SUCCESS,
+                Err(e) => {
+                    eprintln!("conversion : {e}");
+                    ExitCode::FAILURE
+                }
+            }
         }
         Commande::Attributions { ecrire } => {
             let texte = attributions::generer(&assets);

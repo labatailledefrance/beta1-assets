@@ -5,6 +5,7 @@
 
 pub mod archive;
 pub mod attributions;
+pub mod conversion;
 pub mod manifeste;
 pub mod telechargement;
 pub mod verification;

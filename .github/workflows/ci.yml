@@ -14,6 +14,45 @@ jobs:
     uses: labatailledefrance/.github/.github/workflows/rust.yml@2a2b9d8e0fd4a253d281d83127b4f4f67c20880d # v2.0.0
     permissions:
       contents: read
+  # Téléchargement réel (hors Sketchfab) et conversion des textures, sons et
+  # police, empreintes comparées à essais/sorties.sha256. Les entrées sont
+  # gardées en cache, clé = manifeste et script : les hôtes ne sont sollicités
+  # qu'au changement du manifeste. Sans cache de compilation (cache-poisoning) :
+  # le cache ne contient que des données, revérifiées par leur SHA-256.
+  essai-conversion:
+    name: essai de conversion
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      CARGO_TERM_COLOR: always
+      # Hors de git (.gitignore).
+      ESSAI: essai
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Chaîne Rust (rust-toolchain.toml)
+        run: rustup toolchain install && rustup show active-toolchain
+      - name: Construction
+        run: cargo build --release --locked
+      - name: Entrées en cache
+        id: cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.ESSAI }}/racine
+          key: essai-conversion-${{ hashFiles('manifeste.toml', 'essais/conversion.sh') }}
+      # Revérifie les fichiers en cache, télécharge ceux qui manquent.
+      - name: Téléchargement
+        run: essais/conversion.sh telecharger "$ESSAI"
+      - name: Mise en cache des entrées
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.ESSAI }}/racine
+          key: essai-conversion-${{ hashFiles('manifeste.toml', 'essais/conversion.sh') }}
+      - name: Conversion et comparaison des empreintes
+        run: essais/conversion.sh verifier "$ESSAI"
   securite:
     uses: labatailledefrance/.github/.github/workflows/securite.yml@2a2b9d8e0fd4a253d281d83127b4f4f67c20880d # v2.0.0
     permissions:
