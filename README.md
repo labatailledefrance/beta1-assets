@@ -78,6 +78,15 @@ docker run --rm --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-pr
   beta1-assets convertir --racine /sources --sortie /sortie --blender /opt/blender/blender --scripts /opt/assets/blender
 ```
 
+Dans le chart `game`, le Job lance `assets publier`, l'équivalent de `datachain` pour les tiles ([H-06](https://github.com/labatailledefrance/documentation/blob/main/OPEN-PROBLEMS.md#h-06--diffusion-des-tiles)) :
+
+```sh
+assets publier --sources /donnees/sources --sortie /donnees/publications --publication <id>
+assets attendre --fichier /donnees/publications/<id>/COMPLET   # initContainer
+```
+
+La publication est adressée par ses entrées : le chart dérive `<id>` du digest de l'image, qui contient le manifeste et les scripts. Une publication complète relancée sort aussitôt. Sinon, `publier` télécharge ce qui manque, convertit dans `<id>.partiel`, écrit `MANIFESTE` (SHA-256 de chaque fichier) et `COMPLET`, puis renomme : un dossier visible sous son nom est complet et ne change plus.
+
 Poly Pizza (Cloudflare) refuse les IP de datacenter, srv compris : les 8 modèles Quaternius se téléchargent depuis une machine personnelle, puis se copient dans le volume des sources. `telecharger` vérifie les fichiers présents et ne télécharge que les autres.
 
 Contribution : [CONTRIBUTING.md](https://github.com/labatailledefrance/.github/blob/main/CONTRIBUTING.md). Licence de l'outil : AGPL-3.0-or-later ; chaque asset garde la sienne.

@@ -3,8 +3,9 @@
 
 use std::path::PathBuf;
 use std::process::ExitCode;
+use std::time::Duration;
 
-use beta1_assets::{attributions, conversion, manifeste, telechargement, verification};
+use beta1_assets::{attributions, conversion, manifeste, publication, telechargement, verification};
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -53,6 +54,31 @@ enum Commande {
         #[arg(long)]
         sans_blender: bool,
     },
+    /// Job du chart `game` : publication complète, adressée par ses entrées.
+    /// Sort aussitôt si `<sortie>/<publication>/COMPLET` existe ; sinon
+    /// télécharge ce qui manque sous --sources, convertit dans
+    /// `<publication>.partiel`, écrit MANIFESTE et COMPLET, puis renomme.
+    Publier {
+        #[arg(long)]
+        sources: PathBuf,
+        #[arg(long)]
+        sortie: PathBuf,
+        /// Identifiant (`[a-z0-9-]`), donné par le chart.
+        #[arg(long)]
+        publication: String,
+        #[arg(long, default_value = "/opt/blender/blender")]
+        blender: PathBuf,
+        #[arg(long, default_value = "/opt/assets/blender")]
+        scripts: PathBuf,
+    },
+    /// Attend qu'un fichier existe (initContainer : marqueur COMPLET d'une publication).
+    Attendre {
+        #[arg(long)]
+        fichier: PathBuf,
+        /// Secondes entre deux essais.
+        #[arg(long, default_value_t = 10)]
+        intervalle: u64,
+    },
     /// Écrit ATTRIBUTIONS.md (ou l'affiche).
     Attributions {
         /// Écrit le fichier au lieu de l'afficher.
@@ -65,6 +91,10 @@ enum Commande {
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
+    if let Commande::Attendre { fichier, intervalle } = &cli.commande {
+        publication::attendre(fichier, Duration::from_secs((*intervalle).max(1)));
+        return ExitCode::SUCCESS;
+    }
     if let Commande::Empreinte { fichier } = &cli.commande {
         return match verification::empreinte(fichier) {
             Ok((sha256, octets)) => {
@@ -145,6 +175,40 @@ fn main() -> ExitCode {
                 }
             }
         }
+        Commande::Publier { sources, sortie, publication: id, blender, scripts } => {
+            let b = conversion::Blender { executable: blender, scripts };
+            let jeton = std::env::var("SKETCHFAB_TOKEN").ok();
+            let r = publication::publier(&sortie, &id, |travail| {
+                let bilan =
+                    telechargement::telecharger(&assets, &telechargement::Options::nouvelles(sources.clone(), jeton));
+                if !bilan.echecs.is_empty() {
+                    let liste: Vec<String> =
+                        bilan.echecs.iter().map(|(c, e)| format!("{} ({e})", c.display())).collect();
+                    return Err(format!(
+                        "{} fichiers manquants : {} ; Poly Pizza refuse les IP de datacenter : copier ces fichiers \
+                         sous {} depuis une machine personnelle",
+                        liste.len(),
+                        liste.join(", "),
+                        sources.display()
+                    ));
+                }
+                conversion::convertir(&assets, &sources, travail, Some(&b))
+            });
+            match r {
+                Ok(publication::Etat::DejaComplete) => {
+                    println!("publication {id} déjà complète");
+                    ExitCode::SUCCESS
+                }
+                Ok(publication::Etat::Produite) => {
+                    println!("publication {id} complète");
+                    ExitCode::SUCCESS
+                }
+                Err(e) => {
+                    eprintln!("publication {id} : {e}");
+                    ExitCode::FAILURE
+                }
+            }
+        }
         Commande::Attributions { ecrire } => {
             let texte = attributions::generer(&assets);
             match ecrire {
@@ -161,6 +225,6 @@ fn main() -> ExitCode {
                 },
             }
         }
-        Commande::Empreinte { .. } => ExitCode::SUCCESS,
+        Commande::Empreinte { .. } | Commande::Attendre { .. } => ExitCode::SUCCESS,
     }
 }
