@@ -4,7 +4,7 @@ Assets tiers de la beta 1 de **La Bataille de France** : modèles 3D, textures, 
 
 **Ce dépôt ne contient aucun asset.** Il contient leur **manifeste** ([manifeste.toml](manifeste.toml) : URL, taille, SHA-256, licence SPDX, auteur, modifications) et l'outil `assets`, qui les télécharge et les vérifie. Le projet ne redistribue donc rien dans git ; le jeu déployé, lui, sert les assets aux joueurs, d'où la liste fermée de licences. Les crédits sont dans [ATTRIBUTIONS.md](ATTRIBUTIONS.md), généré depuis le manifeste.
 
-**En construction** : conversions (scripts Blender de P-26, textures et sons), puis image et Job de téléchargement dans le chart `game`.
+**En construction** : image et Job de téléchargement et de conversion dans le chart `game`.
 
 ## Règles
 
@@ -32,7 +32,26 @@ cargo run --release -- attributions --ecrire       # régénère ATTRIBUTIONS.md
 
 Les fichiers sont rangés sous `<racine>/<id>/<nom>`. Chaque fichier est reçu sous `<nom>.partiel`, vérifié, puis renommé : un fichier visible sous son nom a été vérifié. Les archives zip (sons d'OpenGameArt) sont extraites à côté d'elles, pour les seules entrées listées.
 
-Sans `SKETCHFAB_TOKEN`, les quatre modèles Sketchfab sont signalés en échec et le reste est téléchargé. Le jeton se crée dans les paramètres du compte Sketchfab (« API token »).
+Sans `SKETCHFAB_TOKEN`, les quatre modèles Sketchfab sont signalés en échec et le reste est téléchargé (`--sans-sketchfab` les ignore). Le jeton se crée dans les paramètres du compte Sketchfab (« API token »).
+
+## Conversion
+
+```sh
+cargo run --release -- convertir --racine assets --sortie jeu   # Blender 5.3.0 dans le PATH
+cargo run --release -- convertir --racine assets --sortie jeu --sans-blender
+```
+
+Sortie, servie aux clients :
+
+| Dossier | Contenu | Produit par |
+|---|---|---|
+| `modeles/` | véhicules et arbre (`.glb`, +X avant, +Z haut, échelle réelle), personnages animés (`.vat`) | [blender/vehicules.py](blender/vehicules.py), [blender/personnages.py](blender/personnages.py), Blender sans fenêtre |
+| `modeles/textures.p24t` | 12 couches de 512 px avec mipmaps, ramenées à un détail autour de la moyenne | Rust (`src/conversion/textures.rs`) |
+| `sons/` | coups de feu, explosions, zombies, moteur, réacteur synthétisé (WAV mono 16 bits), vent et vagues (OGG) | Rust (`src/conversion/sons.rs`) |
+| `polices/` | DotGothic16 et sa licence OFL | copie |
+| `ATTRIBUTIONS.md` | crédits | généré depuis le manifeste |
+
+Blender ne sert qu'aux maillages et aux animations ; tout le reste est en Rust, sans Python ni PIL. Les sorties ont été comparées à celles de P-26 : modèles (Blender 5.3.0), sons et police identiques octet pour octet ; textures à un ou deux niveaux près, le décodeur JPEG n'étant pas celui de PIL. La CI (`essai de conversion`) télécharge les entrées des textures, sons et police (`--sans-modeles` : Poly Pizza refuse les IP de datacenter), convertit sans Blender et compare les empreintes à [essais/sorties.sha256](essais/sorties.sha256).
 
 ## Ajouter un asset
 
